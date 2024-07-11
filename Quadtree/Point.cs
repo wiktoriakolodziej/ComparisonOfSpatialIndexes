@@ -8,13 +8,13 @@ namespace ComparisonOfSpatialIndexes.Quadtree
 {
     public struct Point
     {
-        public int x;
-        public int y;
+        public double _x { get; set; }
+        public double _y { get; set; }
 
-        public Point(int _x, int _y)
+        public Point(double x, double y)
         {
-            x = _x;
-            y = _y;
+            _x = x;
+            _y = y;
         }
     }
 }

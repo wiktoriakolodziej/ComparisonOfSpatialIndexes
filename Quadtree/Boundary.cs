@@ -13,7 +13,7 @@ namespace ComparisonOfSpatialIndexes.Quadtree
 
         public Boundary(Point topLeft, Point botRight)
         {
-            if (topLeft.x > botRight.x)
+            if (topLeft._x > botRight._x)
             {
                 this.topLeft = botRight;
                 this.botRight = topLeft;
@@ -32,17 +32,17 @@ namespace ComparisonOfSpatialIndexes.Quadtree
         // Check if boundary contains given point
         public bool InBoundary(Point p)
         {
-            return p.x >= topLeft.x && p.x <= botRight.x
-                    && p.y >= topLeft.y && p.y <= botRight.y;
+            return p._x >= topLeft._x && p._x <= botRight._x
+                    && p._y >= topLeft._y && p._y <= botRight._y;
         }
 
         // Check if boundary contains given boundary
         public bool InBoundary(Boundary b)
         {
             if (b == null) return false;
-            if (topLeft.x > b.botRight.x || b.topLeft.x > botRight.x)
+            if (topLeft._x > b.botRight._x || b.topLeft._x > botRight._x)
                 return true;
-            if (botRight.y > b.topLeft.y || b.botRight.y > topLeft.y)
+            if (botRight._y > b.topLeft._y || b.botRight._y > topLeft._y)
                 return true;
             return false;
         }
@@ -50,8 +50,8 @@ namespace ComparisonOfSpatialIndexes.Quadtree
         // Check if given boundary contains given point
         static public bool InBoundary(Point p, Boundary b)
         {
-            return p.x >= b.topLeft.x && p.x <= b.botRight.x
-                   && p.y >= b.topLeft.y && p.y <= b.botRight.y;
+            return p._x >= b.topLeft._x && p._x <= b.botRight._x
+                   && p._y >= b.topLeft._y && p._y <= b.botRight._y;
         }
 
     }

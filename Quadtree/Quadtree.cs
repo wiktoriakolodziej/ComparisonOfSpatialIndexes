@@ -27,15 +27,15 @@
         public bool Insert(Node node)
         {
             //if node equals null
-            if (node.Equals(default(Node)))
-                return false;
+            //if (node.Equals(default(Node)))
+            //    return false;
 
             //if node is in the boundaries of quadtree
-            if (!boundary.InBoundary(node.position))
+            if (!boundary.InBoundary(node._position))
                 return false;
 
             //if tree wasn't subdivided yet and hasn't reached its max capacity
-            if (nodes.Count < 2 && topLeftTree == null)
+            if (nodes.Count < 7 && topLeftTree == null)
             {
                 nodes.Add(node);
                 return true;
@@ -58,24 +58,23 @@
         //divide current tree into 4 smaller trees and pass all nodes of this tree to its children
         private void Subdivide()
         {
+            double stepX = double.Abs(boundary.botRight._x - boundary.topLeft._x) / 2;
+            double stepY = double.Abs(boundary.topLeft._y - boundary.botRight._y) / 2;
+            double biggY = boundary.topLeft._y > boundary.botRight._y ? boundary.topLeft._y : boundary.botRight._y;
+            double biggX =  boundary.topLeft._x > boundary.botRight._x ?  boundary.topLeft._x : boundary.botRight._x;
+
             topLeftTree = new Quad(
-                          new Point(boundary.topLeft.x, boundary.topLeft.y),
-                          new Point((boundary.topLeft.x + boundary.botRight.x) / 2,
-                                    (boundary.topLeft.y + boundary.botRight.y) / 2));
+                          new Point(boundary.topLeft._x, boundary.topLeft._y),
+                          new Point(biggX - stepX, biggY- stepY));
             topRightTree = new Quad(
-                       new Point((boundary.topLeft.x + boundary.botRight.x) / 2,
-                                 boundary.topLeft.y),
-                       new Point(boundary.botRight.x,
-                                 (boundary.topLeft.y + boundary.botRight.y) / 2));
+                       new Point(biggX - stepX, boundary.topLeft._y),
+                       new Point(boundary.botRight._x, biggY - stepY));
             botLeftTree = new Quad(
-                       new Point(boundary.topLeft.x,
-                                 (boundary.topLeft.y + boundary.botRight.y) / 2),
-                       new Point((boundary.topLeft.x + boundary.botRight.x) / 2,
-                                 boundary.botRight.y));
+                       new Point(boundary.topLeft._x, biggY - stepY),
+                       new Point(biggX - stepX, boundary.botRight._y));
             botRightTree = new Quad(
-                       new Point((boundary.topLeft.x + boundary.botRight.x) / 2,
-                                 (boundary.topLeft.y + boundary.botRight.y) / 2),
-                       new Point(boundary.botRight.x, boundary.botRight.y));
+                       new Point(biggX - stepX, biggY - stepY),
+                       new Point(boundary.botRight._x, boundary.botRight._y));
             foreach (var element in nodes)
             {
                 Insert(element);
@@ -101,7 +100,7 @@
             {
                 foreach (var node in nodes)
                 {
-                    if (Boundary.InBoundary(node.position, b)) result.Add(node);
+                    if (Boundary.InBoundary(node._position, b)) result.Add(node);
                 }
                 return result;
             }

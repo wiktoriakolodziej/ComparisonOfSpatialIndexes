@@ -9,13 +9,13 @@ namespace ComparisonOfSpatialIndexes.Quadtree
     // The objects that we want stored in the quadtree
     struct Node
     {
-        public Point position;
-        public int data;
+        public Point _position { get; set;}
+        public string _data { get; set; }
 
-        public Node(Point _pos, int _data)
+        public Node(Point pos, string data)
         {
-            position = _pos;
-            data = _data;
+            _position = pos;
+            _data = data;
         }
     }
 }

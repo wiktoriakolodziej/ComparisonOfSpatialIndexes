@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ComparisonOfSpatialIndexes.NewRTree
 {
-    internal class Point(double x, double y) : ISpatial
+    internal class Point(double x, double y, string data) : ISpatial
     {
         public double X { get; set; } = x;
         public double Y { get; set; } = y;
+        public string Data { get; set; } = data;
         public Rect Rect { get; set; } = new Rect(
                 minX: x,
                 minY: y,

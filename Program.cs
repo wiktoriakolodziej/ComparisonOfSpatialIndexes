@@ -1,7 +1,11 @@
-﻿using System.Runtime.Intrinsics.X86;
-using ComparisonOfSpatialIndexes.Quadtree;
+﻿using ComparisonOfSpatialIndexes.Quadtree;
 using ComparisonOfSpatialIndexes.NewRTree;
-using Point = ComparisonOfSpatialIndexes.NewRTree.Point;
+using PointR = ComparisonOfSpatialIndexes.NewRTree.Point;
+using PointQ = ComparisonOfSpatialIndexes.Quadtree.Point;
+using NodeR = ComparisonOfSpatialIndexes.NewRTree.Node;
+using NodeQ = ComparisonOfSpatialIndexes.Quadtree.Node;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace ComparisonOfSpatialIndexes
 {
@@ -9,34 +13,103 @@ namespace ComparisonOfSpatialIndexes
     {
         static void Main(string[] args)
         {
-            //Quad center = new Quad(new Point(8, 8), new Point(0, 0));
-            //Node a = new Node(new Point(1, 1), 1);
-            //Node b = new Node(new Point(2, 5), 2);
-            //Node c = new Node(new Point(7, 6), 3);
-            //center.Insert(a);
-            //center.Insert(b);
-            //center.Insert(c);
+           
 
-            //Console.WriteLine("Nodes in (0,0) x (8,8) rectangle: ");
-            //center.AreaSearch(new Boundary(new Point(8, 8), new Point(0, 0))).ForEach(x => Console.WriteLine("({0}, {1}) -> {2}", x.position.x, x.position.y, x.data));
-            //Console.WriteLine();
-            //Console.WriteLine("Node a: " + center.Search(new Point(1, 1)).data);
-            //Console.WriteLine("Node b: " + center.Search(new Point(2, 5)).data);
-            //Console.WriteLine("Node c: " + center.Search(new Point(7, 6)).data);
-            //Console.WriteLine("Non-existing node: " + center.Search(new Point(5, 5)).data);
+            List<string> filePaths = [];
+            filePaths.Add("Europe.txt");
+            filePaths.Add("Asia.txt");
+            filePaths.Add("North-America.txt");
+            filePaths.Add("South-America.txt");
+            filePaths.Add("Oceania.txt");
+            filePaths.Add("Africa.txt");
 
+            var dict = new Dictionary<Tuple<double,double>, string>();
 
-            var rTRee = new RTree<Point>();
-            var a = new Point(1.0, 1.0);
-            var b = new Point(2, 6);
-            var c = new Point(60, 12);
-            rTRee.Insert(a);
-            rTRee.Insert(b);
-            rTRee.Insert(c);
-            foreach (var element in rTRee.Search(new Rect(1, 1, 7, 7)))
+            var pattern = @"^(\S+)\s+(\d+\.\d+)\s+(\d+\.\d+)$";
+
+            var regex = new Regex(pattern);
+            foreach (var file in filePaths)
             {
-                Console.WriteLine(element.X + " " + element.Y);
+                try
+                {
+                    foreach (var line in File.ReadAllLines(file))
+                    {
+                        Match match = regex.Match(line);
+                        if (!match.Success)
+                            continue;
+                        var name = match.Groups[1].Value;
+                        var coordX = double.Parse(match.Groups[2].Value);
+                        var coordY = double.Parse(match.Groups[3].Value);
+                        dict.TryAdd(new(coordX, coordY), name);
+                    }
+                }
+                catch (System.IO.FileNotFoundException ex)
+                {
+                    Console.WriteLine($"Couldn't find file {ex.FileName}");
+                    return;
+                }
             }
+
+            Stopwatch stopwatch = new Stopwatch();
+
+            Quad quadTree = new Quad(new PointQ(179.97, 71.59), new PointQ(-179.97, -54.93));
+            var quadNodes = new List<NodeQ>();
+            quadNodes.AddRange(dict.Select(element => new NodeQ(new PointQ(element.Key.Item1, element.Key.Item2), element.Value)));
+
+            stopwatch.Start();
+            foreach (var node in quadNodes)
+            {
+                quadTree.Insert(node);
+            }
+            stopwatch.Stop();
+
+            Console.WriteLine($"QuadTree: time of inserting: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            var count = quadTree.AreaSearch(new Boundary(new PointQ(179.97, 71.59), new PointQ(-179.97, -54.93))).Count;
+            stopwatch.Stop();
+
+            Console.WriteLine($"QuadTree: elements in whole area: {count}");
+            Console.WriteLine($"QuadTree: time of searching: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            count = quadTree.AreaSearch(new Boundary(new PointQ(50, 20), new PointQ(-50, -20))).Count;
+            stopwatch.Stop();
+
+            Console.WriteLine($"QuadTree:  elements in (50, 20) x (-50, -20) rectangle: {count}");
+            Console.WriteLine($"QuadTree: time of searching: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+            Console.WriteLine();
+
+            var rTRee = new RTree<PointR>();
+            var rPoints = new List<PointR>();
+            rPoints.AddRange(dict.Select(element => new PointR(element.Key.Item1, element.Key.Item2, element.Value)));
+           
+            stopwatch.Reset();
+            stopwatch.Start();
+            foreach (var point in rPoints)
+            {
+                rTRee.Insert(point);
+            }
+            stopwatch.Stop();
+            Console.WriteLine($"RTree: time of inserting: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            count = rTRee.Search().Count;
+            stopwatch.Stop();
+            Console.WriteLine($"RTree: elements in whole area: {count}");
+            Console.WriteLine($"RTree: time of searching: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            count = rTRee.Search(new Rect(-50, -20, 50 ,20)).Count;
+            stopwatch.Stop();
+            Console.WriteLine($"RTree: elements in (50, 20) x (-50, -20) rectangle: {count}");
+            Console.WriteLine($"RTree: time of searching: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
 
         }
     }
