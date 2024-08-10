@@ -13,15 +13,14 @@ namespace ComparisonOfSpatialIndexes
     {
         static void Main()
         {
-           
-
+            string rootPath = @"";
             List<string> filePaths = [];
-            filePaths.Add("Europe.txt");
-            filePaths.Add("Asia.txt");
-            filePaths.Add("North-America.txt");
-            filePaths.Add("South-America.txt");
-            filePaths.Add("Oceania.txt");
-            filePaths.Add("Africa.txt");
+            filePaths.Add(@$"{rootPath}data\Europe.txt");
+            filePaths.Add(@$"{rootPath}data\Asia.txt");
+            filePaths.Add(@$"{rootPath}data\North-America.txt");
+            filePaths.Add(@$"{rootPath}data\South-America.txt");
+            filePaths.Add(@$"{rootPath}data\Oceania.txt");
+            filePaths.Add(@$"{rootPath}data\Africa.txt");
 
             var dict = new Dictionary<Tuple<double,double>, string>();
 
