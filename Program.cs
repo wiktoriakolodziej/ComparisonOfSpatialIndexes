@@ -1,8 +1,8 @@
 ﻿using ComparisonOfSpatialIndexes.Quadtree;
-using ComparisonOfSpatialIndexes.NewRTree;
-using PointR = ComparisonOfSpatialIndexes.NewRTree.Point;
+using ComparisonOfSpatialIndexes.RTree;
+using PointR = ComparisonOfSpatialIndexes.RTree.Point;
 using PointQ = ComparisonOfSpatialIndexes.Quadtree.Point;
-using NodeR = ComparisonOfSpatialIndexes.NewRTree.Node;
+using NodeR = ComparisonOfSpatialIndexes.RTree.Node;
 using NodeQ = ComparisonOfSpatialIndexes.Quadtree.Node;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
@@ -11,7 +11,7 @@ namespace ComparisonOfSpatialIndexes
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
            
 

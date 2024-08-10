@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComparisonOfSpatialIndexes.R_tree
+namespace ComparisonOfSpatialIndexes.RTree
 {
-    //TKey is boundary
-    //TValue is data in Entry
-    internal abstract class Entry
+    public interface ISpatial
     {
+        Rect Rect { get; }
     }
 }

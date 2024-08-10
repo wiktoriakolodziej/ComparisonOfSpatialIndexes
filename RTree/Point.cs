@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComparisonOfSpatialIndexes.NewRTree
+namespace ComparisonOfSpatialIndexes.RTree
 {
     internal class Point(double x, double y, string data) : ISpatial
     {

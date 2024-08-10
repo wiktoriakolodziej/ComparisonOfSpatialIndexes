@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComparisonOfSpatialIndexes.NewRTree
+namespace ComparisonOfSpatialIndexes.RTree
 {
     public class Rect(double minX, double minY, double maxX, double maxY)
     {
