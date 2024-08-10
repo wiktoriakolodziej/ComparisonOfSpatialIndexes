@@ -1,1 +1,1 @@
-before running the program provide proper root path to data folder 
+before running the program provide proper path to data folder 
